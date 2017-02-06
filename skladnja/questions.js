@@ -18,7 +18,7 @@ new question("c","","»Ups, tega nisem storil namerno.« Poved vsebuje","pristav
 new question("d","","»Moje sanke, stare 5 let, so mi zelo všeč.« Poved vsebuje","pastavek.","vrinjeni stavek.","pristavek.","polstavek."),
 new question("a","","»Iz hladilnika mi prinesi jogurt, velikega.« Poved vsebuje","pristavek.","pastavek.","vrinjeni stavek.","polstavek."),
 new question("b","","»Včeraj sem opravil izpit.« Poved vsebuje","prislovno določilo načina.","prislovno določilo časa.","prislovno določilo kraja.","prislovno določilo vzroka."),
-new question("c","","»Prijaviš se lahko na internetu.« Poved vsebuje","prislovno določilo načina.","prislovno določilo časa.","prislovno določilo kraja.","prislovno določilo vzroka."),
+new question("c","","»Prijaviš se lahko na internetu.« Poved vsebuje","prislovno določilo dopuščanja.","prislovno določilo časa.","prislovno določilo kraja.","prislovno določilo vzroka."),
 new question("d","","Soredje je razmerje med","vrinjenim stavkom in glavnim stavkom.","pristavkom in glavnim stavkom.","polstavkom in glavnim stavkom.","pastavkom in glavnim stavkom."),
 new question("a","","Ujemanje je razmerje med","osebkom in povedkom.","povedkom in predmetom.","osebkom in predmetom.","povedkom in prislovnim določilom."),
 new question("b","","Vezava je razmerje med","osebkom in povedkom.","povedkom in predmetom.","osebkom in predmetom.","povedkom in prislovnim določilom."),
