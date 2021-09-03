@@ -7,20 +7,59 @@ let stacksArr = [];
 let levelArr = [];
 let timestampArr = [];
 let hasteArr = [];
-let chartData = [];
+let stacksOverTimeData = [];
+let oldHasteData = [];
+let newHasteData = [];
+let chart;
 
-fileInput.onchange = function(e) { 
+fileInput.onchange = function(e) {
   var reader = new FileReader();
   reader.onload = onReaderLoad;
   reader.readAsText(fileInput.files[0]);
 };
+
+document.getElementById('chartSelect').onchange = function(e) {
+  let selectedChart = this[this.selectedIndex].value;
+  let data;
+  switch (selectedChart) {
+    case 'stacksOverTime':
+      data = {
+        datasets: [{
+          label: 'Stacks over time',
+          data: stacksOverTimeData,
+          backgroundColor: 'rgb(35, 140, 140)',
+          borderColor: 'rgb(75, 192, 192)',
+        }],
+      };
+      generateChart(data, 'Game time', 'Stacks');
+      break;
+    case 'oldVsNewHaste':
+      data = {
+        datasets: [{
+          label: 'Old haste',
+          data: oldHasteData,
+          backgroundColor: 'rgb(180, 80, 80)',
+          borderColor: 'rgb(150, 60, 60)',
+        }, {
+          label: 'New haste',
+          data: newHasteData,
+          backgroundColor: 'rgb(80, 180, 80)',
+          borderColor: 'rgb(60, 150, 60)',
+        }],
+      };
+      generateChart(data, 'Game time', 'Haste');
+      break;
+  }
+
+  
+}
 
 function onReaderLoad(event) {
   stacksArr = [];
   levelArr = [];
   timestampArr = [];
   hasteArr = [];
-  chartData = [];
+  stacksOverTimeData = [];
 
   statTrackerJson = JSON.parse(event.target.result);
 
@@ -31,22 +70,36 @@ function onReaderLoad(event) {
     timestampArr.push(timestamp);
     hasteArr.push(stat['haste']);
 
-    chartData.push({x: timestamp, y: stat['stacks']});
+    stacksOverTimeData.push({x: timestamp, y: stat['stacks']});
+
+    multiplier = 1;
+    if (stat['level'] >= 16) {
+      multiplier = 100 / 60;
+    }
+    else if (stat['level'] >= 11) {
+      multiplier = 100 / 75;
+    }
+    else if (stat['level'] >= 6) {
+      multiplier = 100 / 90;
+    }
+    oldHasteData.push({x: timestamp, y: (100 + stat['haste']) * multiplier - 100});
+    newHasteData.push({x: timestamp, y: stat['haste'] + 0.5 * stat['stacks']});
   }
-  console.log(chartData);
-
-  generateChart();
-}
-
-function generateChart() {
+  
   const data = {
     datasets: [{
       label: 'Stacks over time',
-      data: chartData,
+      data: stacksOverTimeData,
       backgroundColor: 'rgb(35, 140, 140)',
       borderColor: 'rgb(75, 192, 192)',
     }],
   };
+
+  generateChart(data, 'Game time', 'Stacks');
+}
+
+function generateChart(data, xAxisName, yAxisName) {
+  
   
   const config = {
     type: 'scatter',
@@ -57,7 +110,7 @@ function generateChart() {
           type: 'linear',
           position: 'bottom',
           title: {
-            text: 'Game time',
+            text: xAxisName,
             display: true
           },
           ticks: {
@@ -68,7 +121,7 @@ function generateChart() {
         },
         y: {
           title: {
-            text: 'Stacks',
+            text: yAxisName,
             display: true
           },
           display: true,
@@ -79,7 +132,10 @@ function generateChart() {
     
   };
   
-  let chart = new Chart(
+  if (chart) {
+    chart.destroy();
+  }
+  chart = new Chart(
     document.getElementById('chart'),
     config
   );
