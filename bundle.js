@@ -18,8 +18,11 @@ fileInput.onchange = function(e) {
   reader.readAsText(fileInput.files[0]);
 };
 
-document.getElementById('chartSelect').onchange = function(e) {
-  let selectedChart = this[this.selectedIndex].value;
+document.getElementById('chartSelect').onchange = onChartSelect;
+
+function onChartSelect() {
+  let chartSelectElement = document.getElementById('chartSelect');
+  let selectedChart = chartSelectElement[chartSelectElement.selectedIndex].value;
   let data;
   switch (selectedChart) {
     case 'stacksOverTime':
@@ -50,8 +53,6 @@ document.getElementById('chartSelect').onchange = function(e) {
       generateChart(data, 'Game time', 'Haste');
       break;
   }
-
-  
 }
 
 function onReaderLoad(event) {
@@ -60,6 +61,8 @@ function onReaderLoad(event) {
   timestampArr = [];
   hasteArr = [];
   stacksOverTimeData = [];
+  oldHasteData = [];
+  newHasteData = [];
 
   statTrackerJson = JSON.parse(event.target.result);
 
@@ -86,16 +89,7 @@ function onReaderLoad(event) {
     newHasteData.push({x: timestamp, y: stat['haste'] + 0.5 * stat['stacks']});
   }
   
-  const data = {
-    datasets: [{
-      label: 'Stacks over time',
-      data: stacksOverTimeData,
-      backgroundColor: 'rgb(35, 140, 140)',
-      borderColor: 'rgb(75, 192, 192)',
-    }],
-  };
-
-  generateChart(data, 'Game time', 'Stacks');
+  onChartSelect();
 }
 
 function generateChart(data, xAxisName, yAxisName) {
